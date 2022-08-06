@@ -179,6 +179,8 @@ class SQLCheck(object):
 
             start = False
             msg = list()
+            line_no = 0
+            rule = None
             for line in stdout.splitlines():
                 line = line.strip()
                 if line.startswith(f"[{path}]:"):
@@ -188,10 +190,17 @@ class SQLCheck(object):
                 elif start:
                     msg.append(line)
                 elif line.startswith("[Matching Expression:"):
-                    line_no = int(line.split("line")[-1].strip()[:-1])
-                    issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
+                    line_list = None
+                    if line.find("lines") != -1:
+                        line_list = [int(line.split("lines")[-1].strip()[:-1])]
+                    else:
+                        line_list = [int(num.strip()) for num in line.split("line")[-1].strip()[:-1].split(",")]
+                    for line_no in line_list:
+                        issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
                     start = False
                     msg = list()
+                    line_no = 0
+                    rule = None
 
         # 输出结果到指定的json文件
         with open("result.json", "w") as fp:
