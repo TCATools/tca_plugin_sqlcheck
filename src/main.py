@@ -219,12 +219,8 @@ class SQLCheck(object):
         """
         # 将字符串转化为list
         string_list = str(one_string).split(space_character)
-        first = string_list[0].lower()
-        others = string_list[1:]
-
         # str.capitalize():将字符串的首字母转化为大写
-        others_capital = [word.capitalize() for word in others]
-        others_capital[0:0] = [first]
+        others_capital = [word.capitalize() for word in string_list]
         # 将list组合成为字符串，中间无连接符。
         hump_string = "".join(others_capital)
 
