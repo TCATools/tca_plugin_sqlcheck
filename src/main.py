@@ -13,6 +13,8 @@ import fnmatch
 import argparse
 import subprocess
 
+import settings
+
 
 class SQLCheck(object):
     @staticmethod
