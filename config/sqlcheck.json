@@ -3,14 +3,14 @@
       "name": "tca_plugin_sqlcheck",
       "display_name": "SQLCheck",
       "description": "Automatically identify anti-patterns in SQL queries.",
-      "license": "MIT",
+      "license": "Apache2.0",
       "task_processes": [
         "analyze",
         "datahandle"
       ],
       "scan_app": "codelint",
-      "scm_url": "https://github.com/TCATools/tca_plugin_sqlcheck.git",
-      "run_cmd": "python src/main.py",
+      "scm_url": "https://github.com/TCATools/tca_plugin_sqlcheck.git#main",
+      "run_cmd": "python src/main.py scan",
       "envs": "python_version = 3",
       "build_flag": false,
       "checkrule_set": [
