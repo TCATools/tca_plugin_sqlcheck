@@ -159,6 +159,8 @@ class SQLCheck(object):
             with open(scan_files_env, "r") as rf:
                 scan_files = json.load(rf)
                 # print("[debug] files to scan: %s" % len(scan_files))
+        
+        scan_files = [path for path in scan_files if path.endswith(".sql")]
 
         issues = list()
         for path in scan_files:
