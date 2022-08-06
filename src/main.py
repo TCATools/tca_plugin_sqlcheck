@@ -173,6 +173,9 @@ class SQLCheck(object):
             except Exception as err:
                 print(f"scan {path} failed: %s" % str(err))
                 continue
+            
+            if stderr:
+                raise Exception(f"Tool exec error: {stderr}")
 
             start = False
             msg = list()
