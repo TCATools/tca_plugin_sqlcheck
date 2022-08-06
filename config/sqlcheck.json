@@ -1,0 +1,36 @@
+[
+    {
+      "name": "tca_plugin_sqlcheck",
+      "display_name": "SQLCheck",
+      "description": "Automatically identify anti-patterns in SQL queries.",
+      "license": "MIT",
+      "task_processes": [
+        "analyze",
+        "datahandle"
+      ],
+      "scan_app": "codelint",
+      "scm_url": "https://github.com/TCATools/tca_plugin_sqlcheck.git",
+      "run_cmd": "python src/main.py",
+      "envs": "python_version = 3",
+      "build_flag": false,
+      "checkrule_set": [
+        {
+          "real_name": "NullUsage",
+          "display_name": "NullUsage",
+          "severity": "info",
+          "category": "correctness",
+          "rule_title": "(HINTS) (QUERY ANTI-PATTERN) NOT NULL Usage",
+          "rule_params": null,
+          "custom": false,
+          "languages": [
+            "sql"
+          ],
+          "solution": null,
+          "owner": null,
+          "labels": [],
+          "description": "Use NOT NULL only if the column cannot have a missing value:\nWhen you declare a column as NOT NULL, it should be because it would make no\nsense for the row to exist without a value in that column. Use null to signify a\nmissing value for any data type.",
+          "disable": false
+        }
+      ]
+    }
+  ]
