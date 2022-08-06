@@ -6,7 +6,11 @@ A TCA plugin for [sqlcheck](https://github.com/jarulraj/sqlcheck).
 sqlcheck 1.3
 
 ## 使用
-
+- 部署好TCA
+- 下载本插件
+- 在TCA上加载本插件的[工具JSON](config/sqlcheck.json)
+- 在TCA上的节点管理页面上，给节点添加本插件的工具进程
+- 在待分析的TCA项目的分析方案中，添加本插件的规则，然后启动任务即可
 
 ## Q&A
 
@@ -15,6 +19,7 @@ sqlcheck 1.3
 ```log
 $ ./sqlcheck -h
 ./sqlcheck: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found (required by ./sqlcheck)
+./sqlcheck: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.26' not found (required by ./sqlcheck)
 ./sqlcheck: /lib64/libstdc++.so.6: version `CXXABI_1.3.8' not found (required by ./sqlcheck)
 ./sqlcheck: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ./sqlcheck)
 ```
@@ -26,3 +31,7 @@ $ ./sqlcheck -h
 解决方案：
 - 可参考[sqlcheck readme](https://github.com/jarulraj/sqlcheck)文档，在当前系统中编译得到可执行文件后，拷贝到 [tools](tools/) 对应的目录下。
 
+### 加载工具JSON时候提示语言不存在
+
+解决方案：
+- 在[工具JSON](config/sqlcheck.json)中，修改规则的languages字段对应值为`tsql`
