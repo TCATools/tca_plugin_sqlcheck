@@ -202,6 +202,7 @@ class SQLCheck(object):
                     line_no = 0
                     rule = None
 
+        print("[debug] issues: %s" % issues)
         # 输出结果到指定的json文件
         with open("result.json", "w") as fp:
             json.dump(issues, fp, indent=2)
