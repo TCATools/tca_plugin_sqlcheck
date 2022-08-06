@@ -199,9 +199,9 @@ class SQLCheck(object):
             elif line.startswith("[Matching Expression:"):
                 line_list = None
                 if line.find("lines") != -1:
-                    line_list = [int(line.split("lines")[-1].strip()[:-1])]
+                    line_list = [int(num.strip()) for num in line.split("lines")[-1].strip()[:-1].split(",")]
                 else:
-                    line_list = [int(num.strip()) for num in line.split("line")[-1].strip()[:-1].split(",")]
+                    line_list = [int(line.split("line")[-1].strip()[:-1])]
                 for line_no in line_list:
                     issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
                 start = False
