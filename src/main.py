@@ -172,7 +172,7 @@ class SQLCheck(object):
             try:
                 stdout, stderr = self.__run_cmd(scan_cmds)
             except Exception as err:
-                print(f"scan {path} failed: %s" % str(err))
+                print(f"scan {path} failed: {str(err)}")
                 continue
             
             if stderr:
