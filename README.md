@@ -24,7 +24,15 @@ $ ./sqlcheck -h
 ./sqlcheck: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ./sqlcheck)
 ```
 解决方案：
-- 需要升级g++版本到4.9+
+方案一：
+- 客户端执行机器需要升级g++版本到4.9+
+- 设置LD_LIBRARY_PATH
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<gcc安装位置>/lib64
+```
+方案二：
+- 使用TCA的[工具依赖功能](https://tencent.github.io/CodeAnalysis/zh/guide/%E5%B7%A5%E5%85%B7%E7%AE%A1%E7%90%86/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B7%A5%E5%85%B7%E6%AD%A5%E9%AA%A4%E8%AF%B4%E6%98%8E)，添加gcc到TCA工具依赖中
+- 将该插件安装到TCA上时候，设置上新增的gcc工具依赖即可
 
 ### 现有可执行文件不支持当前系统
 
