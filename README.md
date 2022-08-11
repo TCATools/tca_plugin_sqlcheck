@@ -24,6 +24,7 @@ $ ./sqlcheck -h
 ./sqlcheck: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ./sqlcheck)
 ```
 解决方案：
+
 方案一：
 - 客户端执行机器需要升级g++版本到4.9+
 - 设置LD_LIBRARY_PATH
