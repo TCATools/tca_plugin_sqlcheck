@@ -3,7 +3,7 @@ name: Sync-To-TGIT
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   push-to-mirror:
