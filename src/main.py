@@ -172,11 +172,11 @@ class SQLCheck(object):
             try:
                 stdout, stderr = self.__run_cmd(scan_cmds)
             except Exception as err:
-                print(f"scan {path} failed: {str(err)}")
+                print("scan %s failed: %s" % (path, str(err)))
                 continue
             
             if stderr:
-                raise Exception(f"Tool exec error: {stderr}")
+                raise Exception("Tool exec error: %s" % stderr)
 
             issues.extend(self.handle_data(stdout, path))
 
@@ -185,7 +185,7 @@ class SQLCheck(object):
         with open("result.json", "w") as fp:
             json.dump(issues, fp, indent=2)
     
-    def handle_data(self, stdout: str, path: str):
+    def handle_data(self, stdout, path):
         issues = list()
         start = False
         msg = list()
