@@ -166,6 +166,7 @@ class SQLCheck(object):
         
         scan_files = [path for path in scan_files if path.endswith(".sql")]
 
+        print("[debug] env: %s" % os.environ)
         issues = list()
         for path in scan_files:
             scan_cmds = ["sqlcheck", "-v", "-f", path]
@@ -184,13 +185,17 @@ class SQLCheck(object):
         # 输出结果到指定的json文件
         with open("result.json", "w") as fp:
             json.dump(issues, fp, indent=2)
-    
+
+    # 2022/10/11 适配 Matching Expression 多行的情况
     def handle_data(self, stdout, path):
         issues = list()
         start = False
         msg = list()
-        line_no = 0
         rule = None
+        expression = ""
+        start_expression = False
+
+        finish_issue = False
         for line in stdout.splitlines():
             line = line.strip()
             if line.startswith(f"[{path}]:"):
@@ -198,19 +203,36 @@ class SQLCheck(object):
                 start = True
                 msg.append(line.split(":")[-1].strip())
             elif line.startswith("[Matching Expression:"):
-                line_list = None
-                if line.find("lines") != -1:
-                    line_list = [int(num.strip()) for num in line.split("lines")[-1].strip()[:-1].split(",")]
-                else:
-                    line_list = [int(line.split("line")[-1].strip()[:-1])]
-                for line_no in line_list:
-                    issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
                 start = False
-                msg = list()
-                line_no = 0
-                rule = None
+                expression += line
+                if line[-1] != "]":
+                    start_expression = True
+                else:
+                    finish_issue = True
+
             elif start:
                 msg.append(line)
+            elif start_expression:
+                expression += line
+                # print(expression)
+                if line == "":
+                # if line[-1] == "]":
+                    start_expression = False
+                    finish_issue = True
+            
+            if finish_issue:
+                line_list = None
+                if expression.find("lines") != -1:
+                    line_list = [int(num.strip()) for num in expression.split("lines")[-1].strip()[:-1].split(",")]
+                else:
+                    line_list = [int(expression.split("line")[-1].strip()[:-1])]
+                for line_no in line_list:
+                    issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
+                msg = list()
+                rule = None
+                expression = ""
+                finish_issue = False
+
         return issues
 
     def __convert(self, one_string, space_character=" |-"):
