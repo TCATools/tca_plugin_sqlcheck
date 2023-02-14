@@ -152,6 +152,7 @@ class SQLCheck(object):
 
         # 其他参数从task_request.json文件获取
         task_params = self.__get_task_params()
+        rules = task_params.get("rules", list())
 
         # ------------------------------------------------------------------ #
         # 获取需要扫描的文件列表
@@ -163,7 +164,7 @@ class SQLCheck(object):
             with open(scan_files_env, "r") as rf:
                 scan_files = json.load(rf)
                 # print("[debug] files to scan: %s" % len(scan_files))
-        
+
         scan_files = [path for path in scan_files if path.endswith(".sql")]
 
         print("[debug] env: %s" % os.environ)
@@ -175,11 +176,11 @@ class SQLCheck(object):
             except Exception as err:
                 print("scan %s failed: %s" % (path, str(err)))
                 continue
-            
+
             if stderr:
                 raise Exception("Tool exec error: %s" % stderr)
 
-            issues.extend(self.handle_data(stdout, path))
+            issues.extend(self.handle_data(stdout, path, rules))
 
         print("[debug] issues: %s" % issues)
         # 输出结果到指定的json文件
@@ -187,7 +188,7 @@ class SQLCheck(object):
             json.dump(issues, fp, indent=2)
 
     # 2022/10/11 适配 Matching Expression 多行的情况
-    def handle_data(self, stdout, path):
+    def handle_data(self, stdout, path, rules):
         issues = list()
         start = False
         msg = list()
@@ -216,18 +217,20 @@ class SQLCheck(object):
                 expression += line
                 # print(expression)
                 if line == "":
-                # if line[-1] == "]":
+                    # if line[-1] == "]":
                     start_expression = False
                     finish_issue = True
-            
+
             if finish_issue:
                 line_list = None
                 if expression.find("lines") != -1:
                     line_list = [int(num.strip()) for num in expression.split("lines")[-1].strip()[:-1].split(",")]
                 else:
                     line_list = [int(expression.split("line")[-1].strip()[:-1])]
-                for line_no in line_list:
-                    issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
+                # 2023/2/14 增加规则过滤
+                if rule in rules:
+                    for line_no in line_list:
+                        issues.append({"path": path, "line": line_no, "column": 0, "msg": "\n".join(msg), "rule": rule})
                 msg = list()
                 rule = None
                 expression = ""
